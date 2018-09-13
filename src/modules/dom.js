@@ -5,6 +5,14 @@ import getScrollParent from 'scrollparent';
 
 export { getScrollParent };
 
+function getOffset(e: HTMLElement): any {
+  if (!e) return 0;
+  if (!e.offsetTop) {
+    return getOffset(e.parentNode);
+  }
+  return e.offsetTop;
+}
+
 /**
  * Find the bounding client rect
  *
@@ -116,10 +124,10 @@ export function getScrollTo(element: HTMLElement, offset: number): number {
   }
 
   const parent = getScrollParent(element);
-  let top = element.offsetTop;
+  let top = getOffset(element);
 
   if (hasCustomScrollParent(element) && !hasCustomOffsetParent(element)) {
-    top -= parent.offsetTop;
+    top -= getOffset(parent);
   }
 
   return Math.floor(top - offset);
